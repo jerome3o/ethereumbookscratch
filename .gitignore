@@ -3,3 +3,4 @@ __pycache__/
 .ipynb_checkpoints/
 altair-data*
 .vscode/
+node_modules/
