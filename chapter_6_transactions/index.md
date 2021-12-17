@@ -8,7 +8,9 @@
 
 * [ETH Gas Station](https://ethgasstation.info/)
 * [Explanation of ECDSA](https://www.instructables.com/Understanding-how-ECDSA-protects-your-data/)
-* [Slightly more detailed ECDSA description](https://engineering.purdue.edu/kak/compsec/NewLectures/Lecture14.pdf)
+* Slightly more detailed ECDSA descriptions
+  * [Lecture 14](https://engineering.purdue.edu/kak/compsec/NewLectures/Lecture14.pdf)
+  * [cs miami edu](https://www.cs.miami.edu/home/burt/learning/Csc609.142/ecdsa-cert.pdf)
 
 ## ECDSA Arithmetic
 
