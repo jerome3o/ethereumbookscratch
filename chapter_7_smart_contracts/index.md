@@ -20,3 +20,115 @@ Binary:
 Contract JSON ABI
 [{"inputs":[{"internalType":"uint256","name":"withdraw_amount","type":"uint256"}],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"},{"stateMutability":"payable","type":"receive"}]
 ```
+
+## Truffle
+
+### Setup
+
+```console
+npm install -g truffle
+
+mkdir faucet
+cd faucet
+truffle init
+npm init
+npm install dotenv truffle-wallet-provider ethereumjs-wallet
+
+# Add engines field to package.json (tip: npm -v, and node -v)
+
+rm truffle.js
+
+```
+
+In `truffle-config.js`, uncomment the the localnode development network:
+
+```js
+    development: {
+      host: "127.0.0.1", // Localhost (default: none)
+      port: 8545, // Standard Ethereum port (default: none)
+      network_id: "*", // Any network (default: none)
+    },
+```
+
+#### Setting up contracts
+
+Put your contract into `./contracts/` and run `truffle compile`
+
+Make a new migration based off the existing:
+
+```sh
+sed 's/Migrations/Faucet/g' migrations/1_initial_migration.js > migrations/2_deploy_contracts.js
+```
+
+### Ganache
+
+```
+npm install -g ganache-cli
+
+# Run with:
+ganache-cli --networkId=3 --port="8545" --verbose --gasLimit=8000000 --gasPrice=4000000000
+```
+
+This should be running in a different terminal before running truffle, unless you have a local node running
+
+### Migrating
+
+```console
+truffle migration --network development
+```
+
+## Playing around with the truffle console
+
+Attach to the local node
+
+```console
+truffle console --network development
+```
+
+```js
+// Getting a reference to the deployed faucet contract
+Faucet.deployed().then(f => {FaucetDeployed = f})
+
+// Sending eth to the Faucet
+FaucetDeployed.send(web3.utils.toWei("1", "ether")).then(res => {console.log(res.logs[0].event, res.logs[0].args)})
+
+// Deposit Result {
+//   '0': '0x0E256759C4db963922B919B4C3F5B2A5f4e373Dc',
+//   '1': BN {
+//     negative: 0,
+//     words: [ 56885248, 2993385, 222, <1 empty item> ],
+//     length: 3,
+//     red: null
+//   },
+//   __length__: 2,
+//   from: '0x0E256759C4db963922B919B4C3F5B2A5f4e373Dc',
+//   amount: BN {
+//     negative: 0,
+//     words: [ 56885248, 2993385, 222, <1 empty item> ],
+//     length: 3,
+//     red: null
+//   }
+// }
+
+FaucetDeployed.withdraw(web3.utils.toWei("0.1", "ether")).then(res => {console.log(res.logs[0].event, res.logs[0].args)})
+
+// Withdrawal Result {
+//   '0': '0x0E256759C4db963922B919B4C3F5B2A5f4e373Dc',
+//   '1': BN {
+//     negative: 0,
+//     words: [ 25821184, 13721111, 22, <1 empty item> ],
+//     length: 3,
+//     red: null
+//   },
+//   __length__: 2,
+//   to: '0x0E256759C4db963922B919B4C3F5B2A5f4e373Dc',
+//   amount: BN {
+//     negative: 0,
+//     words: [ 25821184, 13721111, 22, <1 empty item> ],
+//     length: 3,
+//     red: null
+//   }
+// }
+
+```
+
